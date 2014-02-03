@@ -1,0 +1,7 @@
+name: simple_rotate
+timezone: Asia/Tokyo
+markdown: redcarpet 
+markdown_ext:  markdown,mkd,mkdn,md,html
+safe: true
+lsi: false
+pygments: false
