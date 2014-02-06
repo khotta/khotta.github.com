@@ -82,14 +82,14 @@ If specfied "WEEKLY":  The log file will be rotated every 7 days.
 If specfied "MONTHLY":  The log file will be rotated every 30 days.  
 Old file name is renamed to file\_name.YYYYmmdd at the rotation.  
 <br />
-   * <span class="type">Integer</span> <span class="param">generation=4</span>  
+   * <span class="type">Integer</span> <span class="param">generation=0</span>  
 The maximum number of old log files.  
 Old log files will be a generational change in the number that you specify here.   
 For example, if you set the this parameter to 4,  
 Old log files will be created up to 4 generations: file\_name.1, file\_name.2, file\_name.3, the file\_name.4.   
 In this case, will be rotated in up to 5 files, contains the most recent log file.  
 No generation change if you set the value to 0.    
-Default is 4: It will be rotated in 4 old files maximum.  
+Default is 0.   
 
 You can also call #init with block.   
 Close the I/O port of the log file automatically when you exit the block.   
