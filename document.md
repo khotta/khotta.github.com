@@ -4,7 +4,7 @@ title: The documentation for version 1.1.0
 css: page.css
 place: second
 prev: About
-prev_url: about.ja.html
+prev_url: about.html
 upper: yes
 ---
 > ### Definitions
