@@ -1,7 +1,12 @@
-name: simple_rotate
-timezone: Asia/Tokyo
-markdown: redcarpet 
-markdown_ext:  markdown,mkd,mkdn,md,html
-safe: true
-lsi: false
-pygments: false
+title: SimpleRotate
+email: khotta116@gmail.com
+url_top: 
+url_github_author: https://github.com/khotta
+url_github: https://github.com/khotta/simple_rotate
+url_rubygems: https://rubygems.org/gems/simple_rotate
+url_license: https://github.com/khotta/simple_rotate/blob/master/LICENSE.txt
+
+markdown: kramdown
+
+host: 0.0.0.0
+port: 8080

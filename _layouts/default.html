@@ -1,61 +1,41 @@
 <html>
-
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<style>
-.method {
-  color: orangered;
-  font-family: Courier;
-}
-.header {
-  color: green;
-}
-.param_header {
-  margin: 0em;
-  font-weight: bold;
-  color: dimgray;
-}
-.param {
-  color: blue;
-}
-.type {
-  color: dimgray;
-  font-style: italic;
-}
-body {
-  font-family: times;
-  padding-left: 1em; 
-  background-color: ghostwhite;
-}
-.ex {
-  background-color: black;
-  color: white;
-  padding: 1em;
-  font-family: Courier;
-  margin-left: 4em;
-  width: 70em;
-  font-size: 0.9em;
-  white-space: pre;
-}
-.eh {
-  color: lightblue;
-}
-.em {
-  color: orange;
-}
-.terminal {
-  background-color: white;
-  border: dashed 1px black;
-  padding: 1em;
-  font-family: Courier;
-  margin-left: 4em;
-  width: 40em;
-}
-</style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ site.url_top }}/css/default.css" />
+    {% if page.css %}
+    <link rel="stylesheet" href="{{ site.url_top }}/css/{{ page.css }}" />
+    {% endif %}
+    <title>SimpleRotate{% if page.title %} - {{ page.title }}{% endif %}</title>
+    <link rel="shortcut icon" href="/images/favicon.png" />
 </head>
 <body>
 
-{{ content }}
+<div id="wrapper">
+    <a id="site-title" href="{{ site.url_top }}/">
+        <h1 id="simplerotate">SimpleRotate</h1>
+    </a>
+
+    {% if page.place == "top" %}
+        {% include inner_top.html %}
+    {% else %}
+        {% include inner_page.html %}
+    {% endif %}
+
+    {% include footer.html %}
+</div>
+
+{% if page.upper %}
+<svg width="50" height="40" id="upper" xmlns="http://www.w3.org/2000/svg">
+    <path d="M25 0 L0 40 L50 40 Z" fill="royalblue" />
+</svg>
+
+<script type="text/javascript">
+    document.getElementById("upper").onclick = function() {
+        window.scroll(0, 0);
+    }
+</script>
+{% endif %}
 
 </body>
 </html>
