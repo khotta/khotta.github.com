@@ -1,0 +1,42 @@
+---
+---
+h2 {
+    margin-top: 2em;
+}
+
+.header_method {
+    margin-top: 3em;
+    text-indent: 1em;
+    padding: 0.6em 1em;
+    border-top: solid 0.14em dimgray;
+    border-bottom: solid 0.15em dimgray;
+    color: black;
+    font-weight: bold;
+    font-family: Courier;
+    width: 50em;
+}
+
+.header_param {
+    color: orangered;
+    padding: 0em;
+    margin: 0em;
+    font-family: Courier;
+}
+
+.small-header {
+    font-family: 'Audiowide', cursive;
+    font-weight: normal;
+    border-left: 0.4em solid black;
+    text-indent: 1em;
+    text-decoration: underline;
+}
+
+#upper {
+    position: fixed;
+    bottom: 1%;
+    right: 2%;
+    opacity: 0.6;
+    > path {
+        cursor: pointer;
+    }
+}
