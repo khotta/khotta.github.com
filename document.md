@@ -7,10 +7,6 @@ prev: About
 prev_url: about.html
 upper: yes
 ---
-> ### Definitions
-* ログを書き込むファイル名を`ログファイル`と表記することがあります。
-* ログファイルに書き込む内容(`#w(message)`の`message`の部分)を`ログ`と表記することがあります。
-
 > ### Jump quickly
 * [Public Class Methods](#public-class-methods)
     * [instance](#instance)
@@ -46,55 +42,68 @@ upper: yes
 
 ## Public Class Methods
 {% include header_method.html text="instance" id="instance" %}
-> `SimpleRotate`クラスは`Singleton`パターンで実装されています。
-> 従って返却するオブジェクトは唯一の`SimpleRotate`オブジェクトです。
-> `initilize`メソッドが`private`になりオブジェクトからのアクセスはできないため`new`メソッドを使うとエラーなります。  
+> SimpleRotate class is implemented as singleton design pattern,   
+> therefore you can take SimpleRotate object that's having your preference in any context.
 
 > {% include small_header.html text='Returns' %}
-> `SimpleRotate`オブジェクトを返します。
+> Returns an object of SimpleRotate.
 
 
 
 ## Public Instance Methods
 {% include header_method.html text="init([file_name, [limit, [generation]]])" id="init" %}
-> ログの取り方に関する設定をします。
+> Specifies some informations about logging.
 
-> ここで設定した内容は、後に`SimpleRotate::instance`で返されるオブジェクトも保持し続けます。返り値は`self`です。  
 
 > {% include small_header.html text='Returns' %}
-> `SimpleRotate`オブジェクトを返します。
+> Returns an object of SimpleRotate.
 
 > {% include small_header.html text='Parameters' %}
 > * {% include header_param.html text='file_name = File.absolute_path($0+".log")' %}
->> ログを書き込むファイル名を`String`か`Symbol`で指定します。デフォルトは`./実行ファイル名.log`です。フルパス、もしくは相対パスで指定します。
->> 相対パスの場合は、実行ファイルが起点になります。指定したファイルが存在しない場合はこのタイミングでファイルが生成されます。
+>> Specifies filename that is written logs. You must specify absolute path or relative path by `symbol` or `string`.
 
->> ファイルの1行目はローテーションに関する情報です。この行は消さないでください。
+>> Default is `./<current filename>.log`.
 
->> ここで指定したファイルと同じファイルが存在する場合、そのファイルに追加書き込みします。ファイルではなく標準出力のみに出力したい場合はシンボルで`:STDOUT`と指定します。   
+>> When the file you set dosen't exist, the file will be created at this method was called.
+
+>> The first of row in log file is an information of when the file was created.
+>> Because some file system don't support to give file creation datetime.
+>> You shold not delete it.
+
+>> When the file you set already exists, append logs to the file instead of overwriting it.
+
+>> When you prefer to write logs to STDOUT, You should specify this value to `:STDOUT`.
+
 
 > * {% include header_param.html text='limit = "100M"' %}
->> ログファイルの最大サイズを`Integer`もしくは`"1G"`等の文字列で指定します。`"K", "M", "G"`が認識されます。デフォルトは`"1M"`です。
->> 例えば`SimpleRotate.init("/var/log/ruby/app/foo.log", "500M")`と指定すると 500MB までファイルにログを書き込みます。
+>> When the log file reaches a specific size or specific term that are set as `limit`, SimpleRotate renames the log file and creates a new one.
 
->> `500MB`と書いてはいけません。認識するのは末尾の`"K", "M", "G"`だけです。それ以外の文字列は`to_i`によって排除されます。従って`500MB`と書いたときは`500`バイトと認識されます。
+>> There is necessary to set the value with `integer` or `string` for max limit size of log file, You can use the following words `"K", "M", "G"` like `"1G"`.
+>> Default is `"100M"`.
 
->> `init`メソッド、`w`メソッドでログファイルのサイズを評価し ここで指定した設定値を超えていた場合、次のファイルに書き込みます。  
->> その際、古いファイルは`file_name.1`, `file_name.2`, `file_name.3`, `file_name.4`のようにリネームされ、古いログファイルほど古い数字が記されることになります。
+>> For example, When specified like `SimpleRotate.init("/var/log/ruby/app/foo.log", "500M")`, log files are written untill it reaches its size to be "500M" and over.
 
->> また、`"DAILY"`, `"WEEKLY"`, `"MONTHLY"`を指定することでファイルの容量でなく一定の期日ごとにローテーションする事も可能です。
->> その場合は、それぞれログを書き込んだファイルの作成日を起点に`1日毎`, `7日毎`, `30日毎`に次のファイルに書き込みされます。
->> 次のファイルにログを書き込む際に古いファイル名は`file_name.YYYYmmdd`というフォーマットでリネームされます。
+>> You must not set like `"500MB"`, the keywords are only accepted `"K", "M", "G"`. Others will be removed by `to_i`. Therefore `500MB` will be converted to `500` and it means 500 byte.
+
+>> Log file's size is checked when `#init`, `#w` methods are called. After that if file size reaches specific size, the log file is renamed and new log file is created, after logs are written to the new one.
+>> When renaming is done, old log files are renamed as followng `file_name.1`, `file_name.2`, `file_name.3`, `file_name.4`. The older log file, The bigger number.
+
+>> When you set `"DAILY"`, `"WEEKLY"`, `"MONTHLY"` as `string`, you can rotate log files by specific term.
+
+>> * `"DAILY"`: Writes logs to the log file just 24 hours from it has been created.
+>> * `"WEEKLY"`: Writes logs to the log file just 7 days from it has been created.
+>> * `"MONTHLY"`: Writes logs to the log file just 30 days from it has been created.
+
+>> The renaming format of log files is `file_name.YYYYmmdd`.
 
 > * {% include header_param.html text='generation=0' %}
->> 古いログファイルの最大数を指定します。古いログファイルはここで指定した数で世代交代します。
+>> Maximam number of rotations. Renamed log files are rotated by this count.
 
->> 例えば`generation`に`4`を設定すると、古いログファイルは`file_name.1`, `file_name.2`, `file_name.3`, `file_name.4`の 4世代まで作られます。
->> この場合、新しいログファイルを入れると最大 5つのファイルでローテーションします。  
+>> For example, If you set `4` to value of `generation`, old log files are rotated between `file_name.1`, `file_name.2`, `file_name.3`, `file_name.4`.
 
->> 値を`0`に設定すると世代交代は行わません。デフォルトは`0`ですので世代交代は行われません。   
+>> Default value is `0`. If it is set `0`, old log files aren't deleted.
 
-> ブロック付きでコールする事もできます。ブロックを抜けると自動でログファイルの I/O ポートを閉じます。   
+> This example is calling the method with a block. When exits from a block the I/O port of it is closed automatically.
 > {% include small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
@@ -110,46 +119,56 @@ end
 
 
 {% include header_method.html text="with_stdout" id="with_stdout" %}
-> ログを標準出力(STDOUT)にも出すようにします。
+> When `#w` is called, writes logs to not only a log file but also STDOUT.
 
 > {% include small_header.html text='Returns' %}
-> 返り値はありません。`nil`を返します。
-
+> Returns `nil`.
 
 {% include header_method.html text="compress" id="compress" %}
-> ローテーションする際に古いログファイルを gzip 圧縮します。`zlib`を読み込みます。デフォルトは圧縮は行いません。
-> `init`メソッドでログファイルのローテーションが行われる可能性がある為`init`メソッドの前に行うべきです。  
+> Turns on gzip compression. Log files are compressed by gzip when these are rotated and renamed.
+
+> When you enable gzip compression, you must call this method before `init` was called because there is a possibility a log file is rotated.
+
+> Defalt is not available to compress log files.
 
 > {% include small_header.html text='Returns' %}
-> 返り値はありません。`nil`を返します。
+> Returns `nil`.
 
 
 {% include header_method.html text='compress_level(level)' id="compress_level" %}
-> 古いログファイルを圧縮する際の圧縮レベルを指定します。数字が高い方が圧縮度が高くなります。デフォルトの圧縮レベルは`Zlib::DEFAULT_COMPRESSION`です。
-> このメソッドを呼び出すとログファイルの圧縮が有効に切り替わります。
+> Sets gzip compression level.
+
+> Default gzip compression level is `Zlib::DEFAULT_COMPRESSION`.  
+> The grator number, The higher copression.
+
+> * Note: Default compression level which is a good trade-off between space and time.
+
+> Turns on gzip compression when this method is called.
 
 > {% include small_header.html text='Returns' %}
-> 返り値はありません。`nil`を返します。
+> Returns `nil`.
 
 > {% include small_header.html text='Parameters' %}
 > * {% include header_param.html text='lelvel' %}
->> 圧縮レベルを`0-9`までの`Integer`で指定します。
+>> Compression levels from 0 to 9 as `integer`.
 
 
-{% include header_method.html text="w(log_message)" id="w" %}
-> パラメータ`log_message`をログファイルに書き込みます。
+{% include header_method.html text="w(message)" id="w" %}
+> Writes `message` to a log file.
 
-> ここでログファイルに書き込むログは必ず深刻度（ログレベル）の情報を持ちます。
-> 直近に実行したログレベルを決めるメソッド(`#debug`,`#info`,`#warn`,`#error`,`#fatal`)でログレベルは決まります。
-> 一度ログレベルを決めたあとはログレベルの情報は保持され続けます。
-> ログレベルを決めるメソッドが一度も実行されてないオブジェクトは`INFO`をログレベルに持ちます。
+> All of `message` have log levels. Log levels are information of seriousness.   
+> Log levels are defined by `#debug`,`#info`,`#warn`,`#error`,`#fatal`.
+
+> For example, when `#warn` is called, log's seriousness is switched to `WARN`, therefore the defined constant [`$LOG`](#logging_format) will be converted to `WARN`.
+
+> Default log's seriousness is `INFO`.
 
 > {% include small_header.html text='Returns' %}
-> 引数で指定した`log_message`を返します。
+> Returns `message`.
 
 > {% include small_header.html text='Parameters' %}
-> * {% include header_param.html text='log_message' %}
->> ログファイルに出力するログを指定します。`string`でなくても`integer`や`float`でも構いません。`array`を指定する事も可能です。   
+> * {% include header_param.html text='message' %}
+>> Logs to write to a log file. You can set some types not only `string` but also e.g. `integer`, `float`, `array`.
 
 > {% include small_header.html text='For Example' %}
 {% highlight ruby %}
@@ -157,111 +176,114 @@ logger = SimpleRotate.instance
 logger.init("/var/log/ruby/app/foo.log")
 ary = [111, 333, 555]
 logger.w ary
-logger.error.w("エラーです")
+logger.error.w("This is ERROR message")
 {% endhighlight %}
 
-> 下記のようにログファイルに出力されます。
+> Expects to be wrriten in a log file as,
 {% highlight plain %}
 [2014/01/15 19:44:22] - INFO : [111, 333, 555]
-[2014/01/15 19:44:22] - ERROR : エラーです
+[2014/01/15 19:44:22] - ERROR : This is ERROR message
 {% endhighlight %}
 
 
-{% include header_method.html text='&lt;&lt; log_message' id="<<" %}
-> `#w`のエイリアスです。  
+{% include header_method.html text='&lt;&lt; message' id="<<" %}
+> The alias of `#w`. You can use `<<` istead of `#w`.
 
 > {% include small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 logger.init("/var/log/ruby/app/foo.log")
-logger << "エラーです"
+logger.debug << "This is DEBUG message"
 {% endhighlight %}
 
 
 {% include header_method.html text='enable_wflush' id="enable_wflush" %}
-> `#w`を呼び出した後 I/Oポートの内部バッファをフラッシュします。
+> Flushes any buffered data after `#w` was called.
 
 > {% include small_header.html text='Returns' %}
-> 返り値はありません。`nil`を返します。
+> Returns `nil`.
 
 
 {% include header_method.html text='disable_wflush' id="disable_wflush" %}
-> `#w`を呼び出した後 I/Oポートの内部バッファをフラッシュしません。デフォルトはこの挙動です。
+> Dosen't flush any buffered data after `#w` was called. This is Default.
 
 > {% include small_header.html text='Returns' %}
-> 返り値はありません。`nil`を返します。
+> Returns `nil`.
 
 
 {% include header_method.html text='e' id="e" %}
-> ログファイルの I/Oポートを閉じます。
+> Closes I/O stream of log files.
 
 > {% include small_header.html text='Returns' %}
-> `#init`のパラメータ`file_name`に`:STDOUT`を指定した場合は`nil`を返します。それ以外は`true`を返します。
+> Usually retuns `true`, But if set `:STDOUT` in `file_name` when call `#init`, it returns `nil`.
 
 
 {% include header_method.html text='reopen' id="reopen" %}
-> 閉じたログファイルの I/Oポートを開きます。
+> Opens I/O stream of the log file that is closed by `#e`.
 
 > {% include small_header.html text='Returns' %}
-> ログを記録するファイルの`File class`のオブジェクトを返します。
+> The `file` object that is wrotten logs.
 
-> `#init`のパラメータ`file_name`に`:STDOUT`を指定した場合は`nil`を返します。また、I/Oポートを閉じていない時に呼び出すと WARNINGメッセージを出し`nil`を返します。
+> If set `:STDOUT` in `file_name` when call `#init`, it returns `nil`.   
+> Also returns `nil` and output the warning messag to STDERR if a log file isn't closed by `#e`.
 
 
 {% include header_method.html text='flush' id="flush" %}
-> 新しくファイルを生成し、今後はそのファイルにログを書き込むようにします。
-> ファイルサイズが`limit`に満たないファイルをローテーションしたい時に使います。  
+> Rotates log files even if a log file dosen't reaches its threshold(file size).
 
 > {% include small_header.html text='Returns' %}
-> `#init`のパラメータ`limit`に`"DAILY"`や`"WEEKLY"`などのファイルサイズ以外のものを指定した場合はローテーションせず`nil`を返します。
-> `#init`のパラメータ`file_name`に`:STDOUT`を指定した場合も同様に`nil`を返します。
+> If set `"DAILY"` or `"WEEKLY"` or `"MONTHLY"` in `limit` when call `#init`, dosen't rotate log files and it returns `nil`.
+
+> If set `:STDOUT` in `file_name` when call `#init`, it returns `nil`.
 
 
 {% include header_method.html text='threshold [= log_level]' id="threshold" %}
-> 全てのログは`"DEBUG" > "INFO" > "WARN" > "ERROR" > "FATAL"`までのログレベルを持ちます。左から右にかけてログの深刻度は増していきます。
-> ここで指定するのはどのログレベル以降のログをログファイルに出力するかです。
+> All of logs have its seriousness as follows `"DEBUG" > "INFO" > "WARN" > "ERROR" > "FATAL"`.  
+> Log's seriousness is increased form left to right.
 
-> 例えば、`ERROR`を閾値に指定すると`ERROR`もしくはそれ以上のログレベルを持つ`FATAL`をログだけがログファイルに出力されるようになります。
+> Specifies in this method, which logs that is having seriousness should write to a log file.
+
+> For exmaple, If set `"ERROR"` in `threshold`, logs that are having seriousness of `ERROR` and up (means `"FAITAL"`) are written to a log file.
 
 > {% include small_header.html text='Returns' %}
-> 現在値を`string`で返します。
+> Returns current value as `string`.
 
 > {% include small_header.html text='Parameters' %}
 > * {% include header_param.html text='log_lelvel' %}
->> `DEBUG`,`INFO`,`WARN`,`ERROR`,`FATAL`のいずれかを`string`で指定します。デフォルトは`INFO`です。
+>> Log's seriousness. You can select it form the following `"DEBUG"`,`"INFO"`,`"WARN"`,`"ERROR"`,`"FATAL"` as `string`. Default of seriousness is `"INFO"`.
 
 > {% include small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 logger.init("/var/log/ruby/app/foo.log", "DAILY")
 
-# ERROR 以上のログレベルを持つログだけがファイルに出力されます。
+# "ERROR" and up are written to a log file.
 logger.threshold = "ERROR"
 
-logger.debug << "message" #=> DEBUG は書き込まれません。
-logger.info << "message" #=> INFO は書き込まれません。
-logger.warn << "message" #=> WARN は書き込まれません。
-logger.error << "message" #=> ERROR は書き込まれます。
-logger.fatal << "message" #=> FATAL は書き込まれます。
+logger.debug << "message" #=> "DEBUG" isn't written
+logger.info << "message" #=> "INFO" isn't written to a log file
+logger.warn << "message" #=> "WARN" isn't written to a log file
+logger.error << "message" #=> "ERROR" is written to a log file
+logger.fatal << "message" #=> "FATAL" is written to a log file
 {% endhighlight %}
 
 
 {% include header_method.html text='logging_format [= format]' id="logging_format" %}
-> ファイルにログを出力する際のフォーマットを指定します。デフォルトの`format`の値は`"[$DATE] - $LEVEL : $LOG"`です。
+> Defines log's format. Default is `"[$DATE] - $LEVEL : $LOG"`.
 
 > {% include small_header.html text='Returns' %}
-> 現在値を`string`で返します。
+> Returns current value as `string`.
 
 > {% include small_header.html text='Parameters' %}
 > * {% include header_param.html text='format' %}
->> `string`で指定します。フォーマットで使用できる定数は以下です。
+>> Required to set as `string`. You can use following predefined constants in `format`.
 
-> * **$DATE**  - 日付です。日付のフォーマットは #date_format で定義できます。
-> * **$PID**   - プログラムのプロセスIDです。
-> * **$LEVEL** - ログのレベルです。
-> * **$LOG**   - ログすなわち #w(message) の message です。
-> * **$FILE**  - 現在実行中の Ruby スクリプトのファイル名(ファイル名のみ)です。
-> * **$FILE-FUL**  - 現在実行中の Ruby スクリプトのファイル名(絶対パス)です。
+> * **$DATE**  - Date or/and time. You can define the format to call `#date_format`.
+> * **$PID**   - Current Ruby process ID.
+> * **$LEVEL** - Log's seriousness.
+> * **$LOG**   - Logs. it means `message` in `#w(message)`.
+> * **$FILE**  - Current Ruby filename.
+> * **$FILE-FUL**  - Current Ruby absolute filename.
 
 > {% include small_header.html text='For Example' %}
 {% highlight ruby %}
@@ -270,8 +292,7 @@ logger.init("/var/log/ruby/app/foo.log", "1G")
 logger << "message"
 {% endhighlight %}
 
-> 下記のようにログファイルに出力されます。
-
+> Expects to be wrriten in a log file as,
 {% highlight plain %}
 [2013/10/23 20:15:13] - INFO : message
 {% endhighlight %}
@@ -285,23 +306,22 @@ logger.logging_format = "[$LEVEL] : $DATE => $LEVEL: [$LOG] @ $FILE-FUL"
 logger.fatal << "message"
 {% endhighlight %}
 
-> 下記のようにログファイルに出力されます。
-
+> Expects to be wrriten in a log file as,
 {% highlight plain %}
 [FATAL] : 2013/10/23 20:15:13 => FATAL: [message] @ /var/log/ruby/app/foo.log
 {% endhighlight %}
 
 
 {% include header_method.html text='date_format [= format]' id="date_format" %}
-> ログをファイルに出力する時の $DATE のフォーマットを指定します。
-> デフォルトは`"%Y/%m/%d %H:%M:%S"`ですので日付のフォーマットは`2013/10/04 20:04:59`のようになります。
+> Defines the format of [`$DATE`](#logging_format).
+> Default is `"%Y/%m/%d %H:%M:%S"` therefore [`$DATE`](#logging_format) will be coverted to like `2013/10/04 20:04:59`.
 
 > {% include small_header.html text='Returns' %}
-> 現在値を`string`で返します。
+> Returns current value as `string`.
 
 > {% include small_header.html text='Parameters' %}
 > * {% include header_param.html text='format' %}
->> `string`で指定します。`format`の書式は`Date#strftime(format)`の引数と同様です。
+>> Required to set as `string`. The format is same as `Date#strftime(string)`.
 
 > {% include small_header.html text='For Example' %}
 {% highlight ruby %}
@@ -312,8 +332,7 @@ logger.date_format = "%y-%m-%d %H:%M:%S"
 logger << "message"
 {% endhighlight %}
 
-> 下記のようにログファイルに出力されます。
-
+> Expects to be wrriten in a log file as,
 {% highlight plain %}
 [13-10-04 20:04:59] - INFO : message
 {% endhighlight %}
@@ -322,84 +341,92 @@ logger << "message"
 {% include header_method.html text='rename_format [= format]' id="rename_format" %}
 
 > {% include small_header.html text='Returns' %}
-> 現在値を`string`で返します。
+> Returns current value as `string.`
 
 > {% include small_header.html text='Parameters' %}
 > * {% include header_param.html text='format' %}
->> 新しくログファイルを作る際に古いログファイルはリネームされます。ファイル名は`file_name.1`や`file_name.20131024`のような命名規則でリネームされます。
->> この古いファイル名の`.`の部分を`format`で指定する任意の`string`に変更できます。デフォルトは`.`です。
+>> When rotation is done and then a log file is renamed to following like `file_name.1`, `file_name.20131024`.
+
+>> Defines renaming format that is a part of `.`.  For example if you set as `#rename_format(".log.")`, It will be renamed as `file_name.log.1`, `file_name.log.20131024`.
+
+>> Default is a period `.`.
 
 > {% include small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 
-# init でローテーションが行われることがあるので init の前で定義します。
+# Must to define before `#init` was called because there is a possibility a log file is rotated.
 logger.rename_format = ".example."
 
 logger.init("/var/log/ruby/app/foo.log", "1G")
 {% endhighlight %}
-> この場合ローテーションする際に`app.log.example.1`というファイル名でリネームされます。
+> Renames the log filename to `app.log.example.1` when rotation is done.
 
 
 {% include header_method.html text='no_wcheck' id="no_wcheck" %}
-> 次のログファイルを作成するべきかどうかの判断は`#w`か`#init`で行われます。
+> The judgement that there is a necessarity to rotate log files is checked when `#w` or `#init` are called.  
 
-> このメソッドをコールすると`#w`実行時にローテーションを行うべきかチェックを行いません。従って`#w `の実行によってファイルのローテーションは行われません。
+> If this method has been called, dosen't check whether to rotate log files or not even when `#w` is called.
 
 > {% include small_header.html text='Returns' %}
-> 返り値はありません。`nil`を返します。
+> Returns `nil`.
 
 
 {% include header_method.html text='file_closed?' id="file_closed?" %}
-> ログファイルがI/Oポートが閉じているかどうかを調べます。
+> Check whether a log file's I/O stream is closed or not.
 
 > {% include small_header.html text='Returns' %}
-> ログファイルのI/Oポートが開いているときは`true`、それ以外で`false`を返します。
-> なお、`#init`のパラメータ`file_name`に`:STDOUT`を指定した場合は`nil`を返します。
+> When I/O stream is opened, it returns `true`, isn't opened returns `false`.
+
+> If set `:STDOUT` in file_name when call `#init`, it returns `nil`.
 
 
 {% include header_method.html text='silence' id="silence" %}
-> WARNINGメッセージを出力しないようにします。
-> WARNINGメッセージとは`SimpleRotate`クラス内部で予期せぬ状況が発生した時に標準エラー出力に吐かれる`[WARNING] File is already open! - (SimpleRotate::Error)`
-のようなメッセージです。
+> No Warning messages if there are any problems.
+
+> Warning messages are message that are written to STDERR when unexpected problems are occurred in SimpleRotate class.
+
+> For example `[WARNING] File is already open! - (SimpleRotate::Error)`.
 
 > {% include small_header.html text='Returns' %}
-> 返り値はありません。`nil`を返します。
+> Returns `nil`.
 
 
 {% include header_method.html text='debug' id="debug" %}
-> ログレベルを`DEBUG`にします。`DEBUG`はデバッグ用のログです。
+> Switches log's seriousness to `"DEBUG"`. `"DEBUG"` is log for debugging.
 
 > {% include small_header.html text='Returns' %}
-> `SimpleRotate`オブジェクトを返します。従ってそのままメソッドチェインで`#w`につなぐことができます。
+> Returns an object of SimpleRotate.
+
+> Therefore you can use method chaining like `logger.debug.w "debug message"`
 
 
 {% include header_method.html text='info' id="info" %}
-> ログレベルを`INFO`にします。`INFO`はプログラム上のある特定の情報を知らせるログです。
+> Switches log's seriousness to `"INFO"`. `"INFO"` is log for informations in programs.
 
 > {% include small_header.html text='Returns' %}
-> `SimpleRotate`オブジェクトを返します。従ってそのままメソッドチェインで`#w`につなぐことができます。
+> Returns an object of SimpleRotate, therefore you can use method chaining.
 
 
 {% include header_method.html text='warn' id="warn" %}
-> ログレベルを`WARN`にします。`WARN`は深刻なエラーではありませんが警告を促すログです。
+> Switches log's seriousness to `"WARN"`. `"WARN"` is log to inform warning of programs.
 
 > {% include small_header.html text='Returns' %}
-> `SimpleRotate`オブジェクトを返します。従ってそのままメソッドチェインで`#w`につなぐことができます。
+> Returns an object of SimpleRotate, therefore you can use method chaining.
 
 
 {% include header_method.html text='error' id="error" %}
-> ログレベルを`ERROR`にします。`ERROR`はエラーを知らせるログです。
+> Switches log's seriousness to `"ERROR"`. `"ERROR"` is log to inform errors of programs.
 
 > {% include small_header.html text='Returns' %}
-> `SimpleRotate`オブジェクトを返します。従ってそのままメソッドチェインで`#w`につなぐことができます。
+> Returns an object of SimpleRotate, therefore you can use method chaining.
 
 
 {% include header_method.html text='fatal' id="fatal" %}
-> ログレベルを`FATAL`にします。`FATAL`はプログラムが停止するような致命的なログです。
+> Switches log's seriousness to `"FATAL"`. `"FATAL"` is critical log.
 
 > {% include small_header.html text='Returns' %}
-> `SimpleRotate`オブジェクトを返します。従ってそのままメソッドチェインで`#w`につなぐことができます。
+> Returns an object of SimpleRotate, therefore you can use method chaining.
 
 
 > {% include small_header.html text='For Example' %}
@@ -407,13 +434,12 @@ logger.init("/var/log/ruby/app/foo.log", "1G")
 logger = SimpleRotate.instance
 logger.init("/var/log/ruby/app/foo.log")
 logger.warn << "log message"
-logger << "log message" # 省略してもログレベルは"WARN"を引き継ぎます。
+logger << "log message" # the seriousness is keeping "WARN"
 logger.fatal << "log message"
-logger << "log message" # 省略してもログレベルは"FATAL"を引き継ぎます。
+logger << "log message" # the seriousness is keeping "FATAL"
 {% endhighlight %}
 
-> 以下のようにログファイルに書き込まれます。
-
+> Expects to be wrriten in a log file as,
 {% highlight plain %}
 [2013/12/16 14:15:03] - WARN : log message
 [2013/12/16 14:15:03] - WARN : log message
@@ -423,35 +449,39 @@ logger << "log message" # 省略してもログレベルは"FATAL"を引き継�
 
 
 {% include header_method.html text='sleep_time [= sec]' id="sleep_time" %}
-> ログファイルのローテーションが完了したあと停止する時間を秒で指定します。これはマルチスレッド、マルチプロセスの際に重要です。
-> シングルで動かす場合は特に呼び出す意味はありません。この値は`#psync`のパラメータでも指定可能です。
+> Specifies the number of secounds to stop after rotation is finished.
 
-> もし複数のスレッドやプロセスが同時にローテーションを行ってしまう場合はこの値を大きくしてみてください。
-> 実際にリネームが行われるまでのオーバーヘッドを考慮しての事です。
+> It is important to run multiple threads or multiple processes.
+> If you run the program just single, there isn't any meaning to call this method.
+
+> You can also specify this value to call `#psync(sleep_time)`.
+
+> If threads or processes rotate log files at the same time, It may be good to increase the number.
+> It is for overhead that renaming is done actually.
 
 > {% include small_header.html text='Returns' %}
-> 現在値を`float`もしくは`fixnum`で返します。
+> Retruns current value as `float` or `fixnum`.
 
 > {% include small_header.html text='Parameters' %}
 > * {% include header_param.html text='sec' %}
->> `float`もしくは`fixnum`で指定します。デフォルトは`0.1`です。`#psync`をコールしてない場合は`0`です。
+>> Required to set as `float` or `fixnum`.
+
+>> Default is `0.1` but when you didn't call `#psync` its value is `0`.
 
 
 {% include header_method.html text='psync(sec=0.1)' id="psync" %}
-> プロセス間でクリティカルセクションを排他制御し、複数のプロセスによる実行でも安全にロギングできるようにします。`#init`にクリティカルセクションがある為`#init`の前に行うべきです。
-> 書き込みの際に inode番号を調べ常に新しいファイルに書き込みできるように同期を試みます。また、書き込みのあと I/Oポートの内部バッファをフラッシュします。
+> Resolves critical section problem and it provides safety logging even if multi-process program.
 
-> このメソッドをコールすると排他制御用の一時ファイルが生成されます。
-> 一時ファイルは`.SimpleRotate_tempfile_【プログラムのファイル名】`という命名規則でログファイルと同じディレクトリに生成され、Ruby の終了処理で削除されるようにスケジューリングされます。
-> 一時ファイル生成の際に既に同じ名前のファイルが存在する場合や終了処理で一時ファイルが空でない場合や削除するパーミッションがない場合は一時ファイルの削除は実行されません。
-> 通常起こり得ませんがロック取得時に予期しないエラーが起きると3回まで再びロック取得を試みます。3度目が失敗するとロックを取得しないで処理を行います。
+> Must to cal before `#init` was called because it has critical section problem.
+
+> When write logs to a log file, SimpleRotate check its inode number and try to write logs to a newest log file, also flushes any buffered data after `#w` was called.
 
 > {% include small_header.html text='Returns' %}
-> 返り値はありません。`nil`を返します。
+> Returns `nil`.
 
 > {% include small_header.html text='Parameters' %}
 > * {% include header_param.html text='sec' %}
->> ログファイルのローテーションが完了したあと停止する時間を秒で指定します。`float`もしくは`fixnum`で指定します。デフォルトは`0.1`です。
+>> Specifies the number of secounds to stop after rotation is finished. Default is `0.1`.
 
 > {% include small_header.html text='For Example' %}
 {% highlight ruby %}
@@ -462,26 +492,28 @@ logger.init("/var/log/ruby/app/foo.log")
 
 
 {% include header_method.html text='sync_inode' id="sync_inode" %}
-> 現在開いているファイルの inode番号と`#init`の`file_name`で指定したファイルの inode番号を比較し差異を確認した場合`file_name`で指定したファイルを開き直します。これは`#w`呼び出し時に自動で行われるのであまり意識して呼び出すメソッドではありません。
+> Opens a newest log file if inode numbers have a diffrence between a log file be opened and a newest log file. 
+
+> This method is necessarity called in `#w` therefore there is an necessarity to call this method youselves.
 
 > {% include small_header.html text='Returns' %}
-> inode番号に差異があった場合やなんらかの原因で inode番号を取得できない場合は最大で 3回開き直し、それでも inode番号が一致しなければ WARNINGメッセージを出力し`false`を返します。
-> `#no_sync_inode`を呼び出した後は inode番号の確認を行わず常に`nil`を返して終了します。
-> 上記以外の場合で標準出力にのみログを出力するようにしている場合は WARNINGメッセージを出力し`nil`を返して終了します。
-> それ以外では`true`を返します。
+> When there is a difference of both inode numbers, try to open a newest log file, but failed to open it or other problem was occurred it returns `failse` and write the warning message to STDERR.
+
+> If failed to open a log file or didn't open a log file or set `:STDOUNT` in file_name when call `#init`, in the above cases mentioned return `nil`.
+
+> In the other case, returns `true`.
 
 
 {% include header_method.html text='no_sync_inode' id="no_sync_inode" %}
-> 現在開いているファイルの inode番号と`#init`の`file_name`で指定したファイルの inode番号を比較しません。
-> シングルスレッド、シングルプロセス時に使用すべきです。
+> When this method is called dosen't check log file's inode number. You must to call this method when run single thread or process programs.
 
 > {% include small_header.html text='Returns' %}
-> 返り値はありません。`nil`を返します。
+> Returns `nil`.
 
 
 
 <h2 class="header">Required</h2>
-> `SimpleRotate`クラスが使用している標準添付ライブラリです。
+> The standard libraris are required for SimpleRotate.
 
 > ### singleton
 
@@ -491,21 +523,14 @@ logger.init("/var/log/ruby/app/foo.log")
 
 
 
-## Classes
-
+## Internal Classes
 > ### SimpleRotate::Error
->> `SimpleRotate`クラス内での例外を取り扱う内部クラスです。
->> 基本的に`SimpleRotate`クラス内部で発生し得るエラーはこの例外です。  
 
 > ### SimpleRotate::ProcessSync
->> プロセス間で安全にロギングするための機能を提供する内部クラスです。 
->> `SimpleRotate::ProcessSyncMixin`を`Mix-in`しています。
 
 
 
-## Modules
-> `SimpleRotate`クラス内で使用している内部モジュールです。  
-
+## Internal Modules
 > ### SimpleRotate::LogLevel
 
 > ### SimpleRotate::RotateTerm
@@ -513,5 +538,3 @@ logger.init("/var/log/ruby/app/foo.log")
 > ### SimpleRotate::ProcessSyncMixin
 
 > ### SimpleRotate::Validator
-
-
