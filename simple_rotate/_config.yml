@@ -7,6 +7,5 @@ url_rubygems: https://rubygems.org/gems/simple_rotate
 url_license: https://github.com/khotta/simple_rotate/blob/master/LICENSE.txt
 
 markdown: kramdown
-
 host: 0.0.0.0
 port: 8080
