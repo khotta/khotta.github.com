@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: sr/default
 place: top
 css: top.css
 ---

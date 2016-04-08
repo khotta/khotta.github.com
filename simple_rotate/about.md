@@ -1,11 +1,11 @@
 ---
-layout: default
+layout: sr/default
 title: About
 place: first
 en: yes
 ---
 
-{% include btn.html link="document.html" text="See the reference manual" width="20" %}
+{% include sr/btn.html link="document.html" text="See the reference manual" width="20" %}
 
 > ## Features
 > * SimpleRotate is awfully simple and easy to use.

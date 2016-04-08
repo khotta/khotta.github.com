@@ -1,9 +1,9 @@
 <div id="inner">
     <div id="contents">
     {% if page.place == "first" %}
-        {% include breadcrumbs.html now=page.title  %}
+        {% include sr/breadcrumbs.html now=page.title  %}
     {% elsif page.place == "second" %}
-        {% include breadcrumbs.html now=page.title prev=page.prev prev_url=page.prev_url %}
+        {% include sr/breadcrumbs.html now=page.title prev=page.prev prev_url=page.prev_url %}
     {% endif %}
 
     <h2>{{ page.title }}</h2>

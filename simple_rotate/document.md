@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: sr/default
 title: The documentation for version 1.1.0
 css: page.css
 place: second
@@ -41,25 +41,25 @@ upper: yes
 
 
 ## Public Class Methods
-{% include header_method.html text="instance" id="instance" %}
+{% include sr/header_method.html text="instance" id="instance" %}
 > SimpleRotate class is implemented as singleton design pattern,   
 > therefore you can take SimpleRotate object that's having your preference in any context.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns an object of SimpleRotate.
 
 
 
 ## Public Instance Methods
-{% include header_method.html text="init([file_name, [limit, [generation]]])" id="init" %}
+{% include sr/header_method.html text="init([file_name, [limit, [generation]]])" id="init" %}
 > Specifies some informations about logging.
 
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns an object of SimpleRotate.
 
-> {% include small_header.html text='Parameters' %}
-> * {% include header_param.html text='file_name = File.absolute_path($0+".log")' %}
+> {% include sr/small_header.html text='Parameters' %}
+> * {% include sr/header_param.html text='file_name = File.absolute_path($0+".log")' %}
 >> Specifies filename that is written logs. You must specify absolute path or relative path by `symbol` or `string`.
 
 >> Default is `./<current filename>.log`.
@@ -75,7 +75,7 @@ upper: yes
 >> When you prefer to write logs to STDOUT, You should specify this value to `:STDOUT`.
 
 
-> * {% include header_param.html text='limit = "100M"' %}
+> * {% include sr/header_param.html text='limit = "100M"' %}
 >> When the log file reaches a specific size or specific term that are set as `limit`, SimpleRotate renames the log file and creates a new one.
 
 >> There is necessary to set the value with `integer` or `string` for max limit size of log file, You can use the following words `"K", "M", "G"` like `"1G"`.
@@ -96,7 +96,7 @@ upper: yes
 
 >> The renaming format of log files is `file_name.YYYYmmdd`.
 
-> * {% include header_param.html text='generation=0' %}
+> * {% include sr/header_param.html text='generation=0' %}
 >> Maximam number of rotations. Renamed log files are rotated by this count.
 
 >> For example, If you set `4` to value of `generation`, old log files are rotated between `file_name.1`, `file_name.2`, `file_name.3`, `file_name.4`.
@@ -104,7 +104,7 @@ upper: yes
 >> Default value is `0`. If it is set `0`, old log files aren't deleted.
 
 > This example is calling the method with a block. When exits from a block the I/O port of it is closed automatically.
-> {% include small_header.html text='For Example' %}
+> {% include sr/small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 
@@ -118,24 +118,24 @@ end
 {% endhighlight %}
 
 
-{% include header_method.html text="with_stdout" id="with_stdout" %}
+{% include sr/header_method.html text="with_stdout" id="with_stdout" %}
 > When `#w` is called, writes logs to not only a log file but also STDOUT.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns `nil`.
 
-{% include header_method.html text="compress" id="compress" %}
+{% include sr/header_method.html text="compress" id="compress" %}
 > Turns on gzip compression. Log files are compressed by gzip when these are rotated and renamed.
 
 > When you enable gzip compression, you must call this method before `init` was called because there is a possibility a log file is rotated.
 
 > Defalt is not available to compress log files.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns `nil`.
 
 
-{% include header_method.html text='compress_level(level)' id="compress_level" %}
+{% include sr/header_method.html text='compress_level(level)' id="compress_level" %}
 > Sets gzip compression level.
 
 > Default gzip compression level is `Zlib::DEFAULT_COMPRESSION`.  
@@ -145,15 +145,15 @@ end
 
 > Turns on gzip compression when this method is called.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns `nil`.
 
-> {% include small_header.html text='Parameters' %}
-> * {% include header_param.html text='lelvel' %}
+> {% include sr/small_header.html text='Parameters' %}
+> * {% include sr/header_param.html text='lelvel' %}
 >> Compression levels from 0 to 9 as `integer`.
 
 
-{% include header_method.html text="w(message)" id="w" %}
+{% include sr/header_method.html text="w(message)" id="w" %}
 > Writes `message` to a log file.
 
 > All of `message` have log levels. Log levels are information of seriousness.   
@@ -163,14 +163,14 @@ end
 
 > Default log's seriousness is `INFO`.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns `message`.
 
-> {% include small_header.html text='Parameters' %}
-> * {% include header_param.html text='message' %}
+> {% include sr/small_header.html text='Parameters' %}
+> * {% include sr/header_param.html text='message' %}
 >> Logs to write to a log file. You can set some types not only `string` but also e.g. `integer`, `float`, `array`.
 
-> {% include small_header.html text='For Example' %}
+> {% include sr/small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 logger.init("/var/log/ruby/app/foo.log")
@@ -186,10 +186,10 @@ logger.error.w("This is ERROR message")
 {% endhighlight %}
 
 
-{% include header_method.html text='&lt;&lt; message' id="<<" %}
+{% include sr/header_method.html text='&lt;&lt; message' id="<<" %}
 > The alias of `#w`. You can use `<<` istead of `#w`.
 
-> {% include small_header.html text='For Example' %}
+> {% include sr/small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 logger.init("/var/log/ruby/app/foo.log")
@@ -197,47 +197,47 @@ logger.debug << "This is DEBUG message"
 {% endhighlight %}
 
 
-{% include header_method.html text='enable_wflush' id="enable_wflush" %}
+{% include sr/header_method.html text='enable_wflush' id="enable_wflush" %}
 > Flushes any buffered data after `#w` was called.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns `nil`.
 
 
-{% include header_method.html text='disable_wflush' id="disable_wflush" %}
+{% include sr/header_method.html text='disable_wflush' id="disable_wflush" %}
 > Dosen't flush any buffered data after `#w` was called. This is Default.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns `nil`.
 
 
-{% include header_method.html text='e' id="e" %}
+{% include sr/header_method.html text='e' id="e" %}
 > Closes I/O stream of log files.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Usually retuns `true`, But if set `:STDOUT` in `file_name` when call `#init`, it returns `nil`.
 
 
-{% include header_method.html text='reopen' id="reopen" %}
+{% include sr/header_method.html text='reopen' id="reopen" %}
 > Opens I/O stream of the log file that is closed by `#e`.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > The `file` object that is wrotten logs.
 
 > If set `:STDOUT` in `file_name` when call `#init`, it returns `nil`.   
 > Also returns `nil` and output the warning messag to STDERR if a log file isn't closed by `#e`.
 
 
-{% include header_method.html text='flush' id="flush" %}
+{% include sr/header_method.html text='flush' id="flush" %}
 > Rotates log files even if a log file dosen't reaches its threshold(file size).
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > If set `"DAILY"` or `"WEEKLY"` or `"MONTHLY"` in `limit` when call `#init`, dosen't rotate log files and it returns `nil`.
 
 > If set `:STDOUT` in `file_name` when call `#init`, it returns `nil`.
 
 
-{% include header_method.html text='threshold [= log_level]' id="threshold" %}
+{% include sr/header_method.html text='threshold [= log_level]' id="threshold" %}
 > All of logs have its seriousness as follows `"DEBUG" > "INFO" > "WARN" > "ERROR" > "FATAL"`.  
 > Log's seriousness is increased form left to right.
 
@@ -245,14 +245,14 @@ logger.debug << "This is DEBUG message"
 
 > For exmaple, If set `"ERROR"` in `threshold`, logs that are having seriousness of `ERROR` and up (means `"FAITAL"`) are written to a log file.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns current value as `string`.
 
-> {% include small_header.html text='Parameters' %}
-> * {% include header_param.html text='log_lelvel' %}
+> {% include sr/small_header.html text='Parameters' %}
+> * {% include sr/header_param.html text='log_lelvel' %}
 >> Log's seriousness. You can select it form the following `"DEBUG"`,`"INFO"`,`"WARN"`,`"ERROR"`,`"FATAL"` as `string`. Default of seriousness is `"INFO"`.
 
-> {% include small_header.html text='For Example' %}
+> {% include sr/small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 logger.init("/var/log/ruby/app/foo.log", "DAILY")
@@ -268,14 +268,14 @@ logger.fatal << "message" #=> "FATAL" is written to a log file
 {% endhighlight %}
 
 
-{% include header_method.html text='logging_format [= format]' id="logging_format" %}
+{% include sr/header_method.html text='logging_format [= format]' id="logging_format" %}
 > Defines log's format. Default is `"[$DATE] - $LEVEL : $LOG"`.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns current value as `string`.
 
-> {% include small_header.html text='Parameters' %}
-> * {% include header_param.html text='format' %}
+> {% include sr/small_header.html text='Parameters' %}
+> * {% include sr/header_param.html text='format' %}
 >> Required to set as `string`. You can use following predefined constants in `format`.
 
 > * **$DATE**  - Date or/and time. You can define the format to call `#date_format`.
@@ -285,7 +285,7 @@ logger.fatal << "message" #=> "FATAL" is written to a log file
 > * **$FILE**  - Current Ruby filename.
 > * **$FILE-FUL**  - Current Ruby absolute filename.
 
-> {% include small_header.html text='For Example' %}
+> {% include sr/small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 logger.init("/var/log/ruby/app/foo.log", "1G")
@@ -297,7 +297,7 @@ logger << "message"
 [2013/10/23 20:15:13] - INFO : message
 {% endhighlight %}
 
-> {% include small_header.html text='For Example' %}
+> {% include sr/small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 logger.init("/var/log/ruby/app/foo.log", "1G")
@@ -312,18 +312,18 @@ logger.fatal << "message"
 {% endhighlight %}
 
 
-{% include header_method.html text='date_format [= format]' id="date_format" %}
+{% include sr/header_method.html text='date_format [= format]' id="date_format" %}
 > Defines the format of [`$DATE`](#logging_format).
 > Default is `"%Y/%m/%d %H:%M:%S"` therefore [`$DATE`](#logging_format) will be coverted to like `2013/10/04 20:04:59`.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns current value as `string`.
 
-> {% include small_header.html text='Parameters' %}
-> * {% include header_param.html text='format' %}
+> {% include sr/small_header.html text='Parameters' %}
+> * {% include sr/header_param.html text='format' %}
 >> Required to set as `string`. The format is same as `Date#strftime(string)`.
 
-> {% include small_header.html text='For Example' %}
+> {% include sr/small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 logger.init("/var/log/ruby/app/foo.log", "DAILY")
@@ -338,20 +338,20 @@ logger << "message"
 {% endhighlight %}
 
 
-{% include header_method.html text='rename_format [= format]' id="rename_format" %}
+{% include sr/header_method.html text='rename_format [= format]' id="rename_format" %}
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns current value as `string.`
 
-> {% include small_header.html text='Parameters' %}
-> * {% include header_param.html text='format' %}
+> {% include sr/small_header.html text='Parameters' %}
+> * {% include sr/header_param.html text='format' %}
 >> When rotation is done and then a log file is renamed to following like `file_name.1`, `file_name.20131024`.
 
 >> Defines renaming format that is a part of `.`.  For example if you set as `#rename_format(".log.")`, It will be renamed as `file_name.log.1`, `file_name.log.20131024`.
 
 >> Default is a period `.`.
 
-> {% include small_header.html text='For Example' %}
+> {% include sr/small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 
@@ -363,73 +363,73 @@ logger.init("/var/log/ruby/app/foo.log", "1G")
 > Renames the log filename to `app.log.example.1` when rotation is done.
 
 
-{% include header_method.html text='no_wcheck' id="no_wcheck" %}
+{% include sr/header_method.html text='no_wcheck' id="no_wcheck" %}
 > The judgement that there is a necessarity to rotate log files is checked when `#w` or `#init` are called.  
 
 > If this method has been called, dosen't check whether to rotate log files or not even when `#w` is called.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns `nil`.
 
 
-{% include header_method.html text='file_closed?' id="file_closed?" %}
+{% include sr/header_method.html text='file_closed?' id="file_closed?" %}
 > Check whether a log file's I/O stream is closed or not.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > When I/O stream is opened, it returns `true`, isn't opened returns `false`.
 
 > If set `:STDOUT` in file_name when call `#init`, it returns `nil`.
 
 
-{% include header_method.html text='silence' id="silence" %}
+{% include sr/header_method.html text='silence' id="silence" %}
 > No Warning messages if there are any problems.
 
 > Warning messages are message that are written to STDERR when unexpected problems are occurred in SimpleRotate class.
 
 > For example `[WARNING] File is already open! - (SimpleRotate::Error)`.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns `nil`.
 
 
-{% include header_method.html text='debug' id="debug" %}
+{% include sr/header_method.html text='debug' id="debug" %}
 > Switches log's seriousness to `"DEBUG"`. `"DEBUG"` is log for debugging.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns an object of SimpleRotate.
 
 > Therefore you can use method chaining like `logger.debug.w "debug message"`
 
 
-{% include header_method.html text='info' id="info" %}
+{% include sr/header_method.html text='info' id="info" %}
 > Switches log's seriousness to `"INFO"`. `"INFO"` is log for informations in programs.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns an object of SimpleRotate, therefore you can use method chaining.
 
 
-{% include header_method.html text='warn' id="warn" %}
+{% include sr/header_method.html text='warn' id="warn" %}
 > Switches log's seriousness to `"WARN"`. `"WARN"` is log to inform warning of programs.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns an object of SimpleRotate, therefore you can use method chaining.
 
 
-{% include header_method.html text='error' id="error" %}
+{% include sr/header_method.html text='error' id="error" %}
 > Switches log's seriousness to `"ERROR"`. `"ERROR"` is log to inform errors of programs.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns an object of SimpleRotate, therefore you can use method chaining.
 
 
-{% include header_method.html text='fatal' id="fatal" %}
+{% include sr/header_method.html text='fatal' id="fatal" %}
 > Switches log's seriousness to `"FATAL"`. `"FATAL"` is critical log.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns an object of SimpleRotate, therefore you can use method chaining.
 
 
-> {% include small_header.html text='For Example' %}
+> {% include sr/small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 logger.init("/var/log/ruby/app/foo.log")
@@ -448,7 +448,7 @@ logger << "log message" # the seriousness is keeping "FATAL"
 {% endhighlight %}
 
 
-{% include header_method.html text='sleep_time [= sec]' id="sleep_time" %}
+{% include sr/header_method.html text='sleep_time [= sec]' id="sleep_time" %}
 > Specifies the number of secounds to stop after rotation is finished.
 
 > It is important to run multiple threads or multiple processes.
@@ -459,31 +459,31 @@ logger << "log message" # the seriousness is keeping "FATAL"
 > If threads or processes rotate log files at the same time, It may be good to increase the number.
 > It is for overhead that renaming is done actually.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Retruns current value as `float` or `fixnum`.
 
-> {% include small_header.html text='Parameters' %}
-> * {% include header_param.html text='sec' %}
+> {% include sr/small_header.html text='Parameters' %}
+> * {% include sr/header_param.html text='sec' %}
 >> Required to set as `float` or `fixnum`.
 
 >> Default is `0.1` but when you didn't call `#psync` its value is `0`.
 
 
-{% include header_method.html text='psync(sec=0.1)' id="psync" %}
+{% include sr/header_method.html text='psync(sec=0.1)' id="psync" %}
 > Resolves critical section problem and it provides safety logging even if multi-process program.
 
 > Must to cal before `#init` was called because it has critical section problem.
 
 > When write logs to a log file, SimpleRotate check its inode number and try to write logs to a newest log file, also flushes any buffered data after `#w` was called.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns `nil`.
 
-> {% include small_header.html text='Parameters' %}
-> * {% include header_param.html text='sec' %}
+> {% include sr/small_header.html text='Parameters' %}
+> * {% include sr/header_param.html text='sec' %}
 >> Specifies the number of secounds to stop after rotation is finished. Default is `0.1`.
 
-> {% include small_header.html text='For Example' %}
+> {% include sr/small_header.html text='For Example' %}
 {% highlight ruby %}
 logger = SimpleRotate.instance
 logger.psync(0.5)
@@ -491,12 +491,12 @@ logger.init("/var/log/ruby/app/foo.log")
 {% endhighlight %}
 
 
-{% include header_method.html text='sync_inode' id="sync_inode" %}
+{% include sr/header_method.html text='sync_inode' id="sync_inode" %}
 > Opens a newest log file if inode numbers have a diffrence between a log file be opened and a newest log file. 
 
 > This method is necessarity called in `#w` therefore there is an necessarity to call this method youselves.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > When there is a difference of both inode numbers, try to open a newest log file, but failed to open it or other problem was occurred it returns `failse` and write the warning message to STDERR.
 
 > If failed to open a log file or didn't open a log file or set `:STDOUNT` in file_name when call `#init`, in the above cases mentioned return `nil`.
@@ -504,10 +504,10 @@ logger.init("/var/log/ruby/app/foo.log")
 > In the other case, returns `true`.
 
 
-{% include header_method.html text='no_sync_inode' id="no_sync_inode" %}
+{% include sr/header_method.html text='no_sync_inode' id="no_sync_inode" %}
 > When this method is called dosen't check log file's inode number. You must to call this method when run single thread or process programs.
 
-> {% include small_header.html text='Returns' %}
+> {% include sr/small_header.html text='Returns' %}
 > Returns `nil`.
 
 

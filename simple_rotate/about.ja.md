@@ -1,10 +1,10 @@
 ---
-layout: default
+layout: sr/default
 title: About
 place: first
 ---
 
-{% include btn.html link="document.ja.html" text="リファレンスマニュアルを読む" width="20" %}
+{% include sr/btn.html link="document.ja.html" text="リファレンスマニュアルを読む" width="20" %}
 
 > ## 機能
 > * `SimpleRotate`は非常にシンプルで理解しやすい Ruby 用の Logger です。

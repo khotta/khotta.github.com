@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: sr/default
 title: How to install it?
 place: first
 ---

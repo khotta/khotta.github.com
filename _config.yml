@@ -1,5 +1,11 @@
+title: SimpleRotate
+email: khotta116@gmail.com
+url_top_sr: /simple_rotate
+url_github_author: https://github.com/khotta
+url_github: https://github.com/khotta/simple_rotate
+url_rubygems: https://rubygems.org/gems/simple_rotate
+url_license: https://github.com/khotta/simple_rotate/blob/master/LICENSE.txt
+
 markdown: kramdown
 host: 0.0.0.0
 port: 8080
-
-exclude: [simple_rotate]

@@ -2,9 +2,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="{{ site.url_top }}/css/default.css" />
+    <link rel="stylesheet" href="{{ site.url_top_sr }}/css/default.css" />
     {% if page.css %}
-    <link rel="stylesheet" href="{{ site.url_top }}/css/{{ page.css }}" />
+    <link rel="stylesheet" href="{{ site.url_top_sr }}/css/{{ page.css }}" />
     {% endif %}
     <title>SimpleRotate{% if page.title %} - {{ page.title }}{% endif %}</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
@@ -12,17 +12,17 @@
 <body>
 
 <div id="wrapper">
-    <a id="site-title" href="{{ site.url_top }}/">
+    <a id="site-title" href="{{ site.url_top_sr }}/">
         <h1 id="simplerotate">SimpleRotate</h1>
     </a>
 
     {% if page.place == "top" %}
-        {% include inner_top.html %}
+        {% include sr/inner_top.html %}
     {% else %}
-        {% include inner_page.html %}
+        {% include sr/inner_page.html %}
     {% endif %}
 
-    {% include footer.html %}
+    {% include sr/footer.html %}
 </div>
 
 {% if page.upper %}
@@ -37,7 +37,7 @@
 </script>
 {% endif %}
 
-{% include analytics.html %}
+{% include sr/analytics.html %}
 
 </body>
 </html>

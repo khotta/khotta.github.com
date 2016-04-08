@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: sr/default
 title: Release notes
 place: first
 ---

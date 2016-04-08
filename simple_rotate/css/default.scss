@@ -4,7 +4,7 @@
 
 @charset "utf-8";
 
-@import "syntax-highlighting";
+@import "sr/syntax-highlighting";
 
 $footer-color: royalblue;
 $appeal-color: royalblue;
@@ -46,7 +46,7 @@ h1#simplerotate {
     font-size: 1.6em;
     letter-spacing: 0.2em;
     font-family: 'Audiowide', Arial;
-    background-image: url('{{ site.url_top }}/images/logo.png');
+    background-image: url('{{ site.url_top_sr }}/images/logo.png');
     background-size: 1.4em;
     background-repeat: no-repeat;
     background-position: right;
@@ -55,7 +55,7 @@ h1#simplerotate {
 
 #appeal-header {
     width: 100%;
-    background-image: url('{{ site.url_top }}/images/stars.jpg');
+    background-image: url('{{ site.url_top_sr }}/images/stars.jpg');
     background-repeat: repeat;
 }
 
