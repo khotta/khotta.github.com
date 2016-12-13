@@ -3,10 +3,10 @@ layout: sr/default
 title: Release notes
 place: first
 ---
-> ### 1.1.1 - the 12th of December, 2016
+> ### 1.1.1 - the 13th of December, 2016
 >> #### About the change
-- Fixed the warnings.
-- Fixed the problem that is nil convert to empty string.
+- Fixed the some warning errors.
+- Fixed the problem nil convert to empty string.
 
 > ### 1.1.0 - the 30th of March, 2016
 
