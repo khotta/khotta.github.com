@@ -7,7 +7,7 @@ place: first
 >> #### About the change
 - Changes the prefix of tempfile name from '.SimpleRotate_tempfile_' to '.simple_rotate_tempfile_'.
 - Replaces whitespace character(s) '/\s/' on tempfile name to '_'.
-- Allows remaining a temfile even if at_exit wasn't called.
+- Allows remaining a temfile even if at_exit wasn't called.   
     A tempfile must be remain when your program is finished with some signals such as the case that #at_exit isn't called.  
     That case will happen when process was received some signals like INT, TERM, ...   
     I tried to handle this by trapping signals, but when a process received KILL signal SimpleRotate can't handle this.   
