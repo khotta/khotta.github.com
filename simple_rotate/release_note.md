@@ -8,10 +8,10 @@ place: first
 - Changes the prefix of tempfile name from '.SimpleRotate_tempfile_' to '.simple_rotate_tempfile_'.
 - Replaces whitespace character(s) '/\s/' on tempfile name to '_'.
 - Allows remaining a temfile even if #at_exit wasn't called.   
-    A tempfile must be remain when your program is finished with some signals such as the case that #at_exit isn't called.  
-    That case will happen when process was received some signals like INT, TERM, ...   
+    A tempfile must be remain when your program is finished with some signals that dosen't call #at_exit.
+    That case will happen when processes received some signals like INT, TERM, ...   
     I tried to handle this by trapping signals, but when a process received KILL signal SimpleRotate can't handle this.   
-    That why I abandoned to remove a tempfile precisely bacause I think it's impossible.  
+    That why I gave up on removing a tempfile precisely bacause I think it's impossible.  
     I mention that in the case of that #at_exit wasn't called a tempfile must be remain.   
     But if a tempfile is remaining, file locking must be done as well and SimpleRotate will provide you Mutex.   
     So I hope you don't mind that.   
